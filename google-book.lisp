@@ -32,11 +32,12 @@
 
 
 (defun ensure-src (page &optional pagedict bookid)
-  (let ((stream (drakma:http-request (format nil "http://books.google.com.sg/books?id=~a&pg=~a&zoom=3&jscmd=click3"
-					     (bookid page)
-					     (pid page))
-				     :want-stream t)))
-    (collect-pagelist (stream->json stream) :hash-table pagedict :bookid bookid)))
+  (unless (src page)
+    (let ((stream (drakma:http-request (format nil "http://books.google.com.sg/books?id=~a&pg=~a&zoom=3&jscmd=click3"
+					       (bookid page)
+					       (pid page))
+				       :want-stream t)))
+      (collect-pagelist (stream->json stream) :hash-table pagedict :bookid bookid))))
 
 (defun download-page (page location)
   (if (src page)
@@ -61,3 +62,4 @@
 
     
       
+
