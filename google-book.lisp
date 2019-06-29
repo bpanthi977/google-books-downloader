@@ -39,12 +39,15 @@
 				       :want-stream t)))
       (collect-pagelist (stream->json stream) :hash-table pagedict :bookid bookid))))
 
-(defun download-page (page location)
-  (if (src page)
-      (progn
-	(format t "Downloading ~a~%" (pid page))
-	(save-url-to-file (format nil "~a&w=1280" (src page)) (merge-pathnames (format nil "~a.png" (pid page)) location)))
-      (format t "No src. Can't download ~a~%" (pid page))))
+(defun download-page (page location pagedict bookid)
+  (let ((filename (merge-pathnames (format nil "~a.png" (pid page)) location)))
+    (unless (uiop:file-exists-p filename)
+      (ensure-src page pagedict bookid)
+      (if (src page)
+	  (progn
+	    (format t "Downloading ~a~%" (pid page))
+	    (save-url-to-file (format nil "~a&w=1280" (src page)) filename))
+	  (format t "No src. Can't download ~a~%" (pid page))))))
 
 (defun download-book (bookid location) 
   (let ((stream (drakma:http-request (format nil "http://books.google.com.sg/books?id=~a&pg=1&jscmd=click3" bookid)
@@ -57,8 +60,7 @@
     (ensure-directories-exist location)
     (loop for pid in pids
        for page = (gethash pid pagedict) do
-	 (ensure-src page pagedict bookid)
-	 (download-page page location))))
+	 (download-page page location pagedict bookid))))
 
     
       
