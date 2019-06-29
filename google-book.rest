@@ -1,0 +1,6 @@
+#
+GET http://books.google.com.sg/books?id=CnTFLXce3toC&pg=1&jscmd=click3
+
+#
+GET https://books.google.com.sg/books/content?id=CnTFLXce3toC&pg=PP3&img=1&zoom=3&hl=en&sig=ACfU3U1IX_RSN00XMqx-nLxvkywXQGJqCg&w=1280
+#
